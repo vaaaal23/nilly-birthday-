@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday!</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #142dcd, #c8a4ef);
+      overflow: hidden;
+    }
+
+   #background-video {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  display: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgb(112, 207, 234);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 400px;
+      margin: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    h1 {
+      color: #7661ff;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    button {
+      margin: 10px 5px 0 5px;
+      padding: 10px 20px;
+      background-color: #db76c0;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #surprise {
+      display: none;
+      margin-top: 20px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    #surprise.show {
+      display: block;
+      opacity: 1;
+    }
+
+    #slideshow {
+      max-width: 300px;
+      margin: 20px auto 0 auto;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    #slideshow img {
+  width: 100%;
+  max-height: 400px;      /* limit height */
+  object-fit: cover;      /* crop nicely if needed */
+  display: none;
+  border-radius: 15px;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <!-- Background music (no autoplay to avoid browser block) -->
+  <audio id="background-audio" loop>
+    <source src="cat remix.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Background video -->
+  <video id="background-video" muted loop playsinline>
+    <source src="background.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="card">
+    <h1>Happy (belated) Birthday NILLY! ❤️ </h1>
+    <p>Wishing you a super amazing day filled with love, friends and a lot of cake! 🍑 </p>
+
+    <!-- Slideshow -->
+    <div id="slideshow">
+      <img src="photo 1.jpg" alt="Birthday photo 1" class="slide" />
+      <img src="photo 2.jpg" alt="Birthday photo 2" class="slide" />
+      <img src="photo 3.jpg" alt="Birthday photo 3" class="slide" />
+      <img src="photo 4.jpg" alt="Birthday photo 4" class="slide" />
+      <img src="photo 5.jpg" alt="Birthday photo 5" class="slide" />
+      <img src="photo 6.jpg" alt="Birthday photo 6" class="slide" />
+      <img src="photo 7.jpg" alt="Birthday photo 7" class="slide" />
+      <img src="photo 8.jpg" alt="Birthday photo 8" class="slide" />
+      <img src="photo 9.jpg" alt="Birthday photo 9" class="slide" />
+      <img src="photo 10.jpg" alt="Birthday photo 10" class="slide" />
+      <img src="photo 11.jpg" alt="Birthday photo 11" class="slide" />
+      <img src="photo 12.jpg" alt="Birthday photo 12" class="slide" />
+      <img src="photo 13.jpg" alt="Birthday photo 13" class="slide" />
+      <img src="photo 14.jpg" alt="Birthday photo 14" class="slide" />
+    </div>
+
+    <!-- Buttons -->
+    <button onclick="startMusic()">Play Music...</button>
+    <button onclick="stopMusic()">Stop Music </button>
+    <button id="surprise-button" onclick="startSurprise()" style="display: none;">Click for your card 😽 </button>
+    <button onclick="playBackgroundVideo()">Play Background Video 🎬</button>
+
+    <!-- Surprise content -->
+    <div id="surprise">
+      <p>🎂 You're the sweetest! Here's to another year of amazing adventures. 🎈</p>
+      <img src="https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif" alt="Happy Birthday" width="200">
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Slideshow logic
+    let slideIndex = 0;
+    const slides = document.querySelectorAll("#slideshow .slide");
+    let slideInterval;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.display = i === index ? "block" : "none";
+      });
+    }
+
+    function startSlideshow() {
+  showSlide(slideIndex);
+  let firstLoopDone = false;
+
+  slideInterval = setInterval(() => {
+    slideIndex = (slideIndex + 1) % slides.length;
+    showSlide(slideIndex);
+
+    // After one full loop, reveal the surprise button
+    if (slideIndex === 0 && !firstLoopDone) {
+      firstLoopDone = true;
+      document.getElementById("surprise-button").style.display = "inline-block";
+    }
+  }, 3000); // every 3 seconds
+}
+
+    // Music control
+    function startMusic() {
+      const audio = document.getElementById('background-audio');
+      audio.play().catch(error => {
+        console.log("Autoplay was blocked:", error);
+      });
+    }
+
+    function stopMusic() {
+      const audio = document.getElementById('background-audio');
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+    // Surprise logic
+    function startSurprise() {
+      clearInterval(slideInterval);
+      document.getElementById("slideshow").style.display = "none";
+
+      const audio = document.getElementById('background-audio');
+      audio.pause();
+      audio.currentTime = 0;
+
+      const video = document.getElementById('background-video');
+      video.style.display = 'block';
+      video.play();
+
+      document.getElementById('surprise').classList.add('show');
+    }
+
+    // Start slideshow on load
+    window.onload = startSlideshow;
+
+   function playBackgroundVideo() {
+  const video = document.getElementById('background-video');
+  video.style.display = 'block';
+  // Let the DOM update before setting opacity to 1
+  setTimeout(() => {
+    video.style.opacity = '1';
+  }, 50);
+  video.play().catch(error => {
+    console.log("Video playback was blocked:", error);
+  });
+}
+
+  </script>
+
+</body>
+</html>
